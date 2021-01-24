@@ -1,3 +1,4 @@
 {
-    "mongoURI":"mongodb+srv://amanrao23:amanrao123@cluster0.gm44f.mongodb.net/neobus?retryWrites=true&w=majority"
+    "mongoURI":"mongodb+srv://amanrao23:amanrao123@cluster0.gm44f.mongodb.net/neobus?retryWrites=true&w=majority",
+    "jwtSecret":"mySecret"
 }

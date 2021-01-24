@@ -3,17 +3,12 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const { check, validationResult } = require("express-validator");
-const authUser = require("../../middleware/authUser");
-const User = require("../../models/User");
+const Admin = require("../../models/Admin");
+const authAdmin = require("../../middleware/authAdmin");
 
-router.get("/", authUser,async (req, res) => {
-  console.log("hii user");
+router.get("/",authAdmin, async (req, res) => {
+  console.log("hii");
 });
-
-
-
-
-
 router.post(
   "/register",
   check("name", "Name is required").notEmpty(),
@@ -31,27 +26,27 @@ router.post(
     const { name, email, password } = req.body;
 
     try {
-      let user = await User.findOne({ email });
+      let admin = await Admin.findOne({ email });
 
-      if (user) {
+      if (admin) {
         return res
           .status(400)
           .json({ errors: [{ msg: "Bus operator already exists" }] });
       }
 
-      let ticketHistory = [];
-      admin = new User({
+      let buses = [];
+      admin = new Admin({
         name,
         email,
         password,
-        ticketHistory,
+        buses,
       });
 
-      await user.save();
+      await admin.save();
 
       const payload = {
         user: {
-          id: user.id,
+          id: admin.id,
         },
       };
 

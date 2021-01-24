@@ -4,8 +4,11 @@ const app = express();
 
 connectDB();
 
-const PORT = process.env.PORT || 5000;
-
+app.use(express.json());
 app.use("/api/users", require("./routes/api/users"));
+
+app.use("/api/admin", require("./routes/api/admin"));
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`SERVER STARTED ON 5000`));
