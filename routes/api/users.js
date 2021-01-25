@@ -1,74 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const config = require("config");
 const { check, validationResult } = require("express-validator");
-const authUser = require("../../middleware/authUser");
-const User = require("../../models/User");
 
-router.get("/", authUser,async (req, res) => {
-  console.log("hii user");
+const authUser = require("../../middleware/auth/authUser");
+
+const { registerUser, loginUser } = require("../controllers/users");
+
+router.get("/",authUser, async(req,res)=>{
+  res.send("hii")
 });
 
 
+//Register a new user
+router.post("/register",
+registerUser);
 
 
-
-router.post(
-  "/register",
-  check("name", "Name is required").notEmpty(),
-  check("email", "Please include a valid email").isEmail(),
-  check(
-    "password",
-    "Please enter a password with 6 or more characters"
-  ).isLength({ min: 6 }),
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { name, email, password } = req.body;
-
-    try {
-      let user = await User.findOne({ email });
-
-      if (user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Bus operator already exists" }] });
-      }
-
-      let ticketHistory = [];
-      admin = new User({
-        name,
-        email,
-        password,
-        ticketHistory,
-      });
-
-      await user.save();
-
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
-
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: "5 days" },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server error");
-    }
-  }
-);
+//Login a new user
+router.post("/login",loginUser)
 
 module.exports = router;
+
+
+
+
+
+
