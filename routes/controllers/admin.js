@@ -83,3 +83,25 @@ exports.loginAdmin = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+// Add a bus
+exports.addBus = async (req, res) => {
+  const { origin, destination,startTime,endTime } = req.body;
+
+  try {
+    let bus = new Bus({
+      origin: origin,
+      destination: destination,
+      owner: req.user.id,
+      startTime:startTime,
+      endTime:endTime
+    });
+
+    await bus.save();
+
+    res.json(bus);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};

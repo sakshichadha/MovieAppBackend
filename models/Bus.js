@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
 const BusModel = new mongoose.Schema({
-  number: {
-    type: String,
-    required: true,
-  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Admin",
@@ -13,6 +9,14 @@ const BusModel = new mongoose.Schema({
     required: true,
   },
   destination: {
+    type: String,
+    required: true,
+  },
+  startTime: {
+    type: String,
+    required: true,
+  },
+  endTime: {
     type: String,
     required: true,
   },

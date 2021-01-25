@@ -1,15 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const config = require("config");
 const { check, validationResult } = require("express-validator");
-const  authAdmin = require("../../middleware/auth/authAdmin");
-const { registerAdmin, loginAdmin } = require("../controllers/admin");
+const authAdmin = require("../../middleware/auth/authAdmin");
+const { registerAdmin, loginAdmin, addBus } = require("../controllers/admin");
 
-router.get("/",authAdmin, async(req,res)=>{
-  res.send("hii")
+router.get("/", authAdmin, async (req, res) => {
+  res.send("hii");
 });
-
 
 //Register Admin
 router.post(
@@ -25,8 +22,10 @@ router.post(
   registerAdmin
 );
 
-
 //Login Admin
-router.post('/login',loginAdmin)
+router.post("/login", loginAdmin);
+
+//Add a bus
+router.post("/addBus", authAdmin,addBus);
 
 module.exports = router;

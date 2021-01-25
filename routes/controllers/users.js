@@ -2,7 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const User = require("../../models/User");
-
+const Bus = require("../../models/Bus");
 // Register User
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -49,7 +49,6 @@ exports.registerUser = async (req, res) => {
 // Login User
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email);
   try {
     let user = await User.findOne({ email });
     if (!user) {
@@ -82,3 +81,23 @@ exports.loginUser = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+// Find Buses for a given origin and destination
+exports.findBus=async(req,res)=>{
+
+const {origin, destination}=req.body
+try {
+    
+const  buses=await Bus.find({origin:origin, destination:destination})
+return res.json(buses)
+
+} catch (error) {
+    
+    console.log(error.message);
+    res.status(500).send("Server Error");
+
+}
+
+
+
+}

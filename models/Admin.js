@@ -12,10 +12,6 @@ const AdminModel = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  },
-  buses: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Bus",
-  },
+  }
 });
 module.exports = Admin = mongoose.model("admin", AdminModel);
