@@ -3,6 +3,22 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const User = require("../../models/User");
 const Bus = require("../../models/Bus");
+const Tickets = require("../../models/Ticket");
+const { format } = require("prettier");
+
+const formatDate = (date) => {
+  return new Intl.DateTimeFormat().format(new Date(date));
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+};
 // Register User
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -83,21 +99,43 @@ exports.loginUser = async (req, res) => {
 };
 
 // Find Buses for a given origin and destination
-exports.findBus=async(req,res)=>{
-
-const {origin, destination}=req.body
-try {
-    
-const  buses=await Bus.find({origin:origin, destination:destination})
-return res.json(buses)
-
-} catch (error) {
-    
+exports.findBus = async (req, res) => {
+  const { origin, destination } = req.body;
+  try {
+    const buses = await Bus.find({ origin: origin, destination: destination });
+    return res.json(buses);
+  } catch (error) {
     console.log(error.message);
     res.status(500).send("Server Error");
+  }
+};
 
-}
+exports.findBusById = async (req, res) => {
+  const { bus, date } = req.body;
+  try {
+    const bookedTickets = await Tickets.find({
+      bus: bus,
+      date: date + "T00:00:00.000Z",
+    });
+    let vacantSeats=Array(40).fill(1)
 
+    bookedTickets.map((ticket)=>{vacantSeats[ticket.seat-1]=0})
+    console.log(vacantSeats)
+    return res.json(vacantSeats);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
 
-
-}
+exports.bookTicket = async (req, res) => {
+  const { seat, bus, date } = req.body;
+  const ticket = new Ticket({
+    seat: seat,
+    bus: bus,
+    date,
+    user: req.user.id,
+  });
+  await ticket.save();
+  return res.json(ticket);
+};

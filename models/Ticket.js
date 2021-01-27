@@ -12,5 +12,9 @@ const TicketModel = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  seat:{
+    type:Number,
+    required:true
+  }
 });
 module.exports = Ticket = mongoose.model("ticket", TicketModel);

@@ -4,10 +4,15 @@ const { check, validationResult } = require("express-validator");
 const authAdmin = require("../../middleware/auth/authAdmin");
 const { registerAdmin, loginAdmin, addBus } = require("../controllers/admin");
 
-router.get("/", authAdmin, async (req, res) => {
-  res.send("hii");
+router.get('/', authAdmin, async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.user.id).select('-password');
+    res.json(admin);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
-
 //Register Admin
 router.post(
   "/register",

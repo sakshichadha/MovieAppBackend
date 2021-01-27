@@ -4,11 +4,10 @@ const { check, validationResult } = require("express-validator");
 
 const authUser = require("../../middleware/auth/authUser");
 
-const { registerUser, loginUser,findBus} = require("../controllers/users");
+const { registerUser, loginUser,findBus, getUser,findBusById,bookTicket} = require("../controllers/users");
 
-router.get("/", authUser, async (req, res) => {
-  res.send("hii");
-});
+
+router.get('/',authUser,getUser);
 
 //Register a new user
 router.post("/register", registerUser);
@@ -20,3 +19,9 @@ module.exports = router;
 
 //View All Buses
 router.post("/findBus", authUser, findBus);
+
+
+router.post("/getBusById", authUser, findBusById);
+
+
+router.post('/bookTicket',authUser,bookTicket)

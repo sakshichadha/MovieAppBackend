@@ -99,7 +99,7 @@ exports.addBus = async (req, res) => {
 
     await bus.save();
 
-    res.json(bus);
+    res.json({msg:"Bus added successfully"});
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
