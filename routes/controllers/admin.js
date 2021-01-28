@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const Admin = require("../../models/Admin");
-
+const Ticket = require("../../models/Ticket");
 // Register Admin
 exports.registerAdmin = async (req, res) => {
   const { name, email, password } = req.body;
@@ -86,22 +86,59 @@ exports.loginAdmin = async (req, res) => {
 
 // Add a bus
 exports.addBus = async (req, res) => {
-  const { origin, destination,startTime,endTime } = req.body;
+  const { origin, destination, startTime, endTime } = req.body;
 
   try {
     let bus = new Bus({
       origin: origin,
       destination: destination,
       owner: req.user.id,
-      startTime:startTime,
-      endTime:endTime
+      startTime: startTime,
+      endTime: endTime,
     });
 
     await bus.save();
 
-    res.json({msg:"Bus added successfully"});
+    res.json({ msg: "Bus added successfully" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
+  }
+};
+
+//get all buses of an admin
+exports.getMyBuses = async (req, res) => {
+  try {
+    const buses = await Bus.find({ owner: req.user.id });
+    return res.json(buses);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+exports.ticketInfo = async (req, res) => {
+  const { date, bus, seat } = req.body;
+  try {
+    const ticket = await Ticket.findOne({
+      date: date + "T00:00:00.000Z",
+      bus: bus,
+      seat: seat,
+    });
+    return res.json(ticket);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+exports.cancelTickets = async (req, res) => {
+  const { date, bus } = req.body;
+  try {
+    await Ticket.deleteMany({ date: date + "T00:00:00.000Z", bus: bus });
+     res.json({ msg: "All Booking Removed Successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
   }
 };

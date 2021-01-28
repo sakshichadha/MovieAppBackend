@@ -2,15 +2,22 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const authAdmin = require("../../middleware/auth/authAdmin");
-const { registerAdmin, loginAdmin, addBus } = require("../controllers/admin");
+const {
+  registerAdmin,
+  loginAdmin,
+  addBus,
+  getMyBuses,
+  ticketInfo,
+  cancelTickets
+} = require("../controllers/admin");
 
-router.get('/', authAdmin, async (req, res) => {
+router.get("/", authAdmin, async (req, res) => {
   try {
-    const admin = await Admin.findById(req.user.id).select('-password');
+    const admin = await Admin.findById(req.user.id).select("-password");
     res.json(admin);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   }
 });
 //Register Admin
@@ -31,6 +38,14 @@ router.post(
 router.post("/login", loginAdmin);
 
 //Add a bus
-router.post("/addBus", authAdmin,addBus);
+router.post("/addBus", authAdmin, addBus);
 
+//get all buses of admin
+router.get("/myBuses", authAdmin, getMyBuses);
+
+router.post("/ticketInfo", authAdmin, ticketInfo);
+
+
+router.post("/cancelTickets",authAdmin,cancelTickets)
 module.exports = router;
+

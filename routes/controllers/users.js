@@ -5,6 +5,7 @@ const User = require("../../models/User");
 const Bus = require("../../models/Bus");
 const Tickets = require("../../models/Ticket");
 const { format } = require("prettier");
+const Ticket = require("../../models/Ticket");
 
 const formatDate = (date) => {
   return new Intl.DateTimeFormat().format(new Date(date));
@@ -117,10 +118,11 @@ exports.findBusById = async (req, res) => {
       bus: bus,
       date: date + "T00:00:00.000Z",
     });
-    let vacantSeats=Array(40).fill(1)
+    let vacantSeats = Array(40).fill(1);
 
-    bookedTickets.map((ticket)=>{vacantSeats[ticket.seat-1]=0})
-    console.log(vacantSeats)
+    bookedTickets.map((ticket) => {
+      vacantSeats[ticket.seat - 1] = 0;
+    });
     return res.json(vacantSeats);
   } catch (error) {
     console.log(error.message);
@@ -129,13 +131,28 @@ exports.findBusById = async (req, res) => {
 };
 
 exports.bookTicket = async (req, res) => {
-  const { seat, bus, date } = req.body;
+  const { seat, bus, date,name,email,phone } = req.body;
   const ticket = new Ticket({
+    name:name,
+    email:email,
+    phone:phone,
     seat: seat,
     bus: bus,
     date,
     user: req.user.id,
   });
+  console.log(ticket)
   await ticket.save();
   return res.json(ticket);
+};
+
+exports.myTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.find({ user: req.user.id });
+
+    return res.json(tickets);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
 };
