@@ -1,16 +1,10 @@
-const express = require("express");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const User = require("../../models/User");
 const Bus = require("../../models/Bus");
-const Tickets = require("../../models/Ticket");
-const { format } = require("prettier");
 const Ticket = require("../../models/Ticket");
 
-const formatDate = (date) => {
-  return new Intl.DateTimeFormat().format(new Date(date));
-};
-
+//Fetch a user
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -20,6 +14,7 @@ exports.getUser = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
 // Register User
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -104,6 +99,7 @@ exports.findBus = async (req, res) => {
   const { origin, destination } = req.body;
   try {
     const buses = await Bus.find({ origin: origin, destination: destination });
+
     return res.json(buses);
   } catch (error) {
     console.log(error.message);
@@ -111,10 +107,11 @@ exports.findBus = async (req, res) => {
   }
 };
 
+//Find a particular bus
 exports.findBusById = async (req, res) => {
   const { bus, date } = req.body;
   try {
-    const bookedTickets = await Tickets.find({
+    const bookedTickets = await Ticket.find({
       bus: bus,
       date: date + "T00:00:00.000Z",
     });
@@ -130,29 +127,70 @@ exports.findBusById = async (req, res) => {
   }
 };
 
+//Book a Ticket
 exports.bookTicket = async (req, res) => {
-  const { seat, bus, date,name,email,phone } = req.body;
+  const { seat, bus, date, name, email, phone } = req.body;
   const ticket = new Ticket({
-    name:name,
-    email:email,
-    phone:phone,
+    name: name,
+    email: email,
+    phone: phone,
     seat: seat,
     bus: bus,
     date,
     user: req.user.id,
   });
-  console.log(ticket)
   await ticket.save();
   return res.json(ticket);
 };
 
-exports.myTickets = async (req, res) => {
-  try {
-    const tickets = await Ticket.find({ user: req.user.id });
+//Cancel a ticket
+exports.cancelTicket = async (req, res) => {
+  const { id } = req.body;
 
-    return res.json(tickets);
+  try {
+    await Ticket.findByIdAndDelete(id);
+
+    return res.json(id);
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Server Error");
   }
+};
+
+//Fetch all booked tickets by a user
+exports.myTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.find({ user: req.user.id });
+    const results = [];
+    tickets.map(async (ticket) => {
+      try {
+        const fetchBus = await Bus.findById(ticket.bus);
+        const result = {
+          id: ticket._id,
+          origin: fetchBus.origin,
+          destination: fetchBus.destination,
+          startTime: fetchBus.startTime,
+          endTime: fetchBus.endTime,
+          date: ticket.date,
+          seat: ticket.seat,
+        };
+
+        await resultPush(result, results);
+      } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Server Error");
+      }
+    });
+    setTimeout(function () {
+      return res.json(results);
+    }, 1000);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+//Helper function for myTickets
+const resultPush = async (result, results) => {
+  await results.push(result);
 };

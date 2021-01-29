@@ -2,7 +2,9 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const Admin = require("../../models/Admin");
 const Ticket = require("../../models/Ticket");
-// Register Admin
+const Bus = require("../../models/Bus");
+
+// Register a new Admin
 exports.registerAdmin = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -87,16 +89,18 @@ exports.loginAdmin = async (req, res) => {
 // Add a bus
 exports.addBus = async (req, res) => {
   const { origin, destination, startTime, endTime } = req.body;
-
+  console.log(origin);
   try {
-    let bus = new Bus({
+    const own = await Admin.findOne({ _id: req.user.id });
+    console.log(own);
+    bus = new Bus({
+      name: own.name,
       origin: origin,
       destination: destination,
       owner: req.user.id,
       startTime: startTime,
       endTime: endTime,
     });
-
     await bus.save();
 
     res.json({ msg: "Bus added successfully" });
@@ -108,8 +112,17 @@ exports.addBus = async (req, res) => {
 
 //get all buses of an admin
 exports.getMyBuses = async (req, res) => {
+  const { origin, destination } = req.body;
+  console.log(origin);
+  console.log(destination);
+  console.log(req.user.id);
   try {
-    const buses = await Bus.find({ owner: req.user.id });
+    const buses = await Bus.find({
+      origin: origin,
+      destination: destination,
+      owner: req.user.id,
+    });
+    console.log(buses);
     return res.json(buses);
   } catch (error) {
     console.log(error.message);
@@ -117,6 +130,7 @@ exports.getMyBuses = async (req, res) => {
   }
 };
 
+//Get info about a booked ticket
 exports.ticketInfo = async (req, res) => {
   const { date, bus, seat } = req.body;
   try {
@@ -132,11 +146,12 @@ exports.ticketInfo = async (req, res) => {
   }
 };
 
+//Cancel all Tickets of a bus
 exports.cancelTickets = async (req, res) => {
   const { date, bus } = req.body;
   try {
     await Ticket.deleteMany({ date: date + "T00:00:00.000Z", bus: bus });
-     res.json({ msg: "All Booking Removed Successfully" });
+    res.json({ msg: "All Booking Removed Successfully" });
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Server Error");

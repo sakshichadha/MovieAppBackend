@@ -8,9 +8,10 @@ const {
   addBus,
   getMyBuses,
   ticketInfo,
-  cancelTickets
+  cancelTickets,
 } = require("../controllers/admin");
 
+//FETCH ADMIN FROM DB
 router.get("/", authAdmin, async (req, res) => {
   try {
     const admin = await Admin.findById(req.user.id).select("-password");
@@ -20,6 +21,7 @@ router.get("/", authAdmin, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
 //Register Admin
 router.post(
   "/register",
@@ -41,11 +43,12 @@ router.post("/login", loginAdmin);
 router.post("/addBus", authAdmin, addBus);
 
 //get all buses of admin
-router.get("/myBuses", authAdmin, getMyBuses);
+router.post("/myBuses", authAdmin, getMyBuses);
 
+//view info of a booked ticket
 router.post("/ticketInfo", authAdmin, ticketInfo);
 
+//cancel all tickets of a bus
+router.post("/cancelTickets", authAdmin, cancelTickets);
 
-router.post("/cancelTickets",authAdmin,cancelTickets)
 module.exports = router;
-

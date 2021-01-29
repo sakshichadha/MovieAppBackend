@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 const TicketModel = new mongoose.Schema({
-  name:{
-    type:String,
-    required:true
+  name: {
+    type: String,
+    required: true,
   },
-  email:{
-    type:String,
-    required:true
+  email: {
+    type: String,
+    required: true,
   },
-  phone:{
-    type:String,
-    required:true
+  phone: {
+    type: String,
+    required: true,
   },
   date: {
     type: Date,
@@ -24,9 +24,9 @@ const TicketModel = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  seat:{
-    type:Number,
-    required:true
-  }
+  seat: {
+    type: Number,
+    required: true,
+  },
 });
 module.exports = Ticket = mongoose.model("ticket", TicketModel);
