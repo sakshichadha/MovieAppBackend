@@ -135,7 +135,7 @@ exports.ticketInfo = async (req, res) => {
   const { date, bus, seat } = req.body;
   try {
     const ticket = await Ticket.findOne({
-      date: date + "T00:00:00.000Z",
+      date: date,
       bus: bus,
       seat: seat,
     });
@@ -150,7 +150,7 @@ exports.ticketInfo = async (req, res) => {
 exports.cancelTickets = async (req, res) => {
   const { date, bus } = req.body;
   try {
-    await Ticket.deleteMany({ date: date + "T00:00:00.000Z", bus: bus });
+    await Ticket.deleteMany({ date: date, bus: bus });
     res.json({ msg: "All Booking Removed Successfully" });
   } catch (error) {
     console.log(error.message);
