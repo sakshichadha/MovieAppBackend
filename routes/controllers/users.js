@@ -67,8 +67,6 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
 
-    // const isMatch = await bcrypt.compare(password, user.password);
-
     if (password != user.password) {
       return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
@@ -110,13 +108,13 @@ exports.findBus = async (req, res) => {
 //Find a particular bus
 exports.findBusById = async (req, res) => {
   const { bus, date } = req.body;
-  console.log(bus)
+  console.log(bus);
   try {
     const bookedTickets = await Ticket.find({
       bus: bus,
-      date: date
+      date: date,
     });
-    console.log(bookedTickets)
+    console.log(bookedTickets);
     let vacantSeats = Array(40).fill(1);
 
     bookedTickets.map((ticket) => {

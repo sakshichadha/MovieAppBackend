@@ -15,7 +15,7 @@ const {
   cancelTicket,
 } = require("../controllers/users");
 
-//Get a user from DB
+//Get a user from db
 router.get("/", authUser, getUser);
 
 //Register a new user
@@ -24,10 +24,10 @@ router.post("/register", registerUser);
 //Login a new user
 router.post("/login", loginUser);
 
-//View All Buses
+//View All buses
 router.post("/findBus", authCommon, findBus);
 
-//Fetch a bus by its Id
+//Fetch a bus by its id
 router.post("/getBusById", authCommon, findBusById);
 
 //Book a ticket

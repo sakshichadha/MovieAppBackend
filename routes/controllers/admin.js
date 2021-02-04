@@ -59,8 +59,6 @@ exports.loginAdmin = async (req, res) => {
       return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
 
-    // const isMatch = await bcrypt.compare(password, user.password);
-
     if (password != user.password) {
       return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
     }
