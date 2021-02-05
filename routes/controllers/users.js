@@ -4,7 +4,7 @@ const User = require("../../models/User");
 const Bus = require("../../models/Bus");
 const Ticket = require("../../models/Ticket");
 
-//Fetch a user
+//fetch a user
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -15,7 +15,7 @@ exports.getUser = async (req, res) => {
   }
 };
 
-// Register User
+// register user
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -58,7 +58,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login User
+// login user
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -92,7 +92,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Find Buses for a given origin and destination
+// find buses for a given origin and destination
 exports.findBus = async (req, res) => {
   const { origin, destination } = req.body;
   try {
@@ -105,7 +105,7 @@ exports.findBus = async (req, res) => {
   }
 };
 
-//Find a particular bus
+//find a particular bus
 exports.findBusById = async (req, res) => {
   const { bus, date } = req.body;
 
@@ -127,7 +127,7 @@ exports.findBusById = async (req, res) => {
   }
 };
 
-//Book a Ticket
+//book a Ticket
 exports.bookTicket = async (req, res) => {
   const { seat, bus, date, name, email, phone } = req.body;
   const ticket = new Ticket({
@@ -143,7 +143,7 @@ exports.bookTicket = async (req, res) => {
   return res.json(ticket);
 };
 
-//Cancel a ticket
+//cancel a ticket
 exports.cancelTicket = async (req, res) => {
   const { id } = req.body;
 
@@ -157,7 +157,7 @@ exports.cancelTicket = async (req, res) => {
   }
 };
 
-//Fetch all booked tickets by a user
+//fetch all booked tickets by a user
 exports.myTickets = async (req, res) => {
   try {
     const tickets = await Ticket.find({ user: req.user.id });
@@ -190,7 +190,7 @@ exports.myTickets = async (req, res) => {
   }
 };
 
-//Helper function for myTickets
+//Helper function for my tickets
 const resultPush = async (result, results) => {
   await results.push(result);
 };
