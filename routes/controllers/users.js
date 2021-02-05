@@ -108,13 +108,13 @@ exports.findBus = async (req, res) => {
 //Find a particular bus
 exports.findBusById = async (req, res) => {
   const { bus, date } = req.body;
-  console.log(bus);
+
   try {
     const bookedTickets = await Ticket.find({
       bus: bus,
       date: date,
     });
-    console.log(bookedTickets);
+
     let vacantSeats = Array(40).fill(1);
 
     bookedTickets.map((ticket) => {

@@ -87,7 +87,6 @@ exports.loginAdmin = async (req, res) => {
 // Add a bus
 exports.addBus = async (req, res) => {
   const { origin, destination, startTime, endTime } = req.body;
-  console.log(origin);
   try {
     const own = await Admin.findOne({ _id: req.user.id });
     console.log(own);
@@ -111,16 +110,14 @@ exports.addBus = async (req, res) => {
 //get all buses of an admin
 exports.getMyBuses = async (req, res) => {
   const { origin, destination } = req.body;
-  console.log(origin);
-  console.log(destination);
-  console.log(req.user.id);
+
   try {
     const buses = await Bus.find({
       origin: origin,
       destination: destination,
       owner: req.user.id,
     });
-    console.log(buses);
+
     return res.json(buses);
   } catch (error) {
     console.log(error.message);
