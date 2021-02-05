@@ -15,28 +15,28 @@ const {
   cancelTicket,
 } = require("../controllers/users");
 
-//Get a user from db
+//get a user from db
 router.get("/", authUser, getUser);
 
-//Register a new user
+//register a new user
 router.post("/register", registerUser);
 
-//Login a new user
+//login a new user
 router.post("/login", loginUser);
 
-//View All buses
+//view All buses
 router.post("/findBus", authCommon, findBus);
 
-//Fetch a bus by its id
+//fetch a bus by its id
 router.post("/getBusById", authCommon, findBusById);
 
-//Book a ticket
+//book a ticket
 router.post("/bookTicket", authUser, bookTicket);
 
-//Get tickets booked by user
+//get tickets booked by user
 router.get("/myTickets", authUser, myTickets);
 
-//Cancel a booked ticket
+//cancel a booked ticket
 router.post("/cancelTicket", authUser, cancelTicket);
 
 module.exports = router;

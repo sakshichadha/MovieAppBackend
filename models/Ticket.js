@@ -1,3 +1,4 @@
+//ticket schema
 const mongoose = require("mongoose");
 const TicketModel = new mongoose.Schema({
   name: {
