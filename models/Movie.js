@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const BusModel = new mongoose.Schema({
+const MovieModel = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -8,14 +8,7 @@ const BusModel = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Admin",
   },
-  origin: {
-    type: String,
-    required: true,
-  },
-  destination: {
-    type: String,
-    required: true,
-  },
+ 
   startTime: {
     type: String,
     required: true,
@@ -25,4 +18,4 @@ const BusModel = new mongoose.Schema({
     required: true,
   },
 });
-module.exports = Bus = mongoose.model("bus", BusModel);
+module.exports = Movie = mongoose.model("movie", MovieModel);

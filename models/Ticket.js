@@ -17,9 +17,9 @@ const TicketModel = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  bus: {
+  movie: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Bus",
+    ref: "Movie",
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

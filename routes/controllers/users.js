@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const User = require("../../models/User");
-const Bus = require("../../models/Bus");
+const Movie = require("../../models/Movie");
 const Ticket = require("../../models/Ticket");
 
 //fetch a user
@@ -24,7 +24,7 @@ exports.registerUser = async (req, res) => {
     if (user) {
       return res
         .status(400)
-        .json({ errors: [{ msg: "Bus operator already exists" }] });
+        .json({ errors: [{ msg: "movie operator already exists" }] });
     }
 
     let ticketHistory = [];
@@ -93,12 +93,12 @@ exports.loginUser = async (req, res) => {
 };
 
 // find buses for a given origin and destination
-exports.findBus = async (req, res) => {
-  const { origin, destination } = req.body;
+exports.findMovie = async (req, res) => {
+  // const { origin, destination } = req.body;
   try {
-    const buses = await Bus.find({ origin: origin, destination: destination });
+    const movies = await Movie.find({});
 
-    return res.json(buses);
+    return res.json(movies);
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Server Error");
@@ -106,12 +106,12 @@ exports.findBus = async (req, res) => {
 };
 
 //find a particular bus
-exports.findBusById = async (req, res) => {
-  const { bus, date } = req.body;
+exports.findMovieById = async (req, res) => {
+  const { movie, date } = req.body;
 
   try {
     const bookedTickets = await Ticket.find({
-      bus: bus,
+      movie: movie,
       date: date,
     });
 
@@ -129,13 +129,13 @@ exports.findBusById = async (req, res) => {
 
 //book a Ticket
 exports.bookTicket = async (req, res) => {
-  const { seat, bus, date, name, email, phone } = req.body;
+  const { seat, movie, date, name, email, phone } = req.body;
   const ticket = new Ticket({
     name: name,
     email: email,
     phone: phone,
     seat: seat,
-    bus: bus,
+    movie: movie,
     date,
     user: req.user.id,
   });
@@ -164,11 +164,9 @@ exports.myTickets = async (req, res) => {
     const results = [];
     tickets.map(async (ticket) => {
       try {
-        const fetchBus = await Bus.findById(ticket.bus);
+        const fetchBus = await Movie.findById(ticket.movie);
         const result = {
           id: ticket._id,
-          origin: fetchBus.origin,
-          destination: fetchBus.destination,
           startTime: fetchBus.startTime,
           endTime: fetchBus.endTime,
           date: ticket.date,

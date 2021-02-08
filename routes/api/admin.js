@@ -5,8 +5,8 @@ const authAdmin = require("../../middleware/auth/authAdmin");
 const {
   registerAdmin,
   loginAdmin,
-  addBus,
-  getMyBuses,
+  addMovie,
+  getMyMovies,
   ticketInfo,
   cancelTickets,
 } = require("../controllers/admin");
@@ -40,10 +40,10 @@ router.post(
 router.post("/login", loginAdmin);
 
 //Add a bus
-router.post("/addBus", authAdmin, addBus);
+router.post("/addMovie", authAdmin, addMovie);
 
 //get all buses of admin
-router.post("/myBuses", authAdmin, getMyBuses);
+router.post("/myMovies", authAdmin, getMyMovies);
 
 //view info of a booked ticket
 router.post("/ticketInfo", authAdmin, ticketInfo);

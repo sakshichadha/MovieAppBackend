@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const Admin = require("../../models/Admin");
 const Ticket = require("../../models/Ticket");
-const Bus = require("../../models/Bus");
+const Movie = require("../../models/Movie");
 
 // Register a new Admin
 exports.registerAdmin = async (req, res) => {
@@ -14,15 +14,15 @@ exports.registerAdmin = async (req, res) => {
     if (admin) {
       return res
         .status(400)
-        .json({ errors: [{ msg: "Bus operator already exists" }] });
+        .json({ errors: [{ msg: "Movie operator already exists" }] });
     }
 
-    let buses = [];
+    let movies = [];
     admin = new Admin({
       name,
       email,
       password,
-      buses,
+      movies,
     });
 
     await admin.save();
@@ -85,22 +85,20 @@ exports.loginAdmin = async (req, res) => {
 };
 
 // Add a bus
-exports.addBus = async (req, res) => {
-  const { origin, destination, startTime, endTime } = req.body;
+exports.addMovie = async (req, res) => {
+  const { startTime, endTime } = req.body;
   try {
     const own = await Admin.findOne({ _id: req.user.id });
     console.log(own);
-    bus = new Bus({
+    movie = new Movie({
       name: own.name,
-      origin: origin,
-      destination: destination,
       owner: req.user.id,
       startTime: startTime,
       endTime: endTime,
     });
-    await bus.save();
+    await movie.save();
 
-    res.json({ msg: "Bus added successfully" });
+    res.json({ msg: "Movie added successfully" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -108,17 +106,17 @@ exports.addBus = async (req, res) => {
 };
 
 //get all buses of an admin
-exports.getMyBuses = async (req, res) => {
-  const { origin, destination } = req.body;
+exports.getMyMovies = async (req, res) => {
+  // const { origin, destination } = req.body;
 
   try {
-    const buses = await Bus.find({
-      origin: origin,
-      destination: destination,
+    const movies = await Movie.find({
+      // origin: origin,
+      // destination: destination,
       owner: req.user.id,
     });
 
-    return res.json(buses);
+    return res.json(movies);
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Server Error");
@@ -127,11 +125,11 @@ exports.getMyBuses = async (req, res) => {
 
 //Get info about a booked ticket
 exports.ticketInfo = async (req, res) => {
-  const { date, bus, seat } = req.body;
+  const { date, movie, seat } = req.body;
   try {
     const ticket = await Ticket.findOne({
       date: date,
-      bus: bus,
+      movie: movie,
       seat: seat,
     });
     return res.json(ticket);
@@ -143,9 +141,9 @@ exports.ticketInfo = async (req, res) => {
 
 //Cancel all Tickets of a bus
 exports.cancelTickets = async (req, res) => {
-  const { date, bus } = req.body;
+  const { date, movie } = req.body;
   try {
-    await Ticket.deleteMany({ date: date, bus: bus });
+    await Ticket.deleteMany({ date: date, movie: movie });
     res.json({ msg: "All Booking Removed Successfully" });
   } catch (error) {
     console.log(error.message);

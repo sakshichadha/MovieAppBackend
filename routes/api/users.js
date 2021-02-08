@@ -7,9 +7,9 @@ const authCommon = require("../../middleware/auth/authCommon");
 const {
   registerUser,
   loginUser,
-  findBus,
+  findMovie,
   getUser,
-  findBusById,
+  findMovieById,
   bookTicket,
   myTickets,
   cancelTicket,
@@ -25,10 +25,10 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 //view All buses
-router.post("/findBus", authCommon, findBus);
+router.post("/findMovie", authCommon, findMovie);
 
 //fetch a bus by its id
-router.post("/getBusById", authCommon, findBusById);
+router.post("/getMovieById", authCommon, findMovieById);
 
 //book a ticket
 router.post("/bookTicket", authUser, bookTicket);
