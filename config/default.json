@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://amanrao23:amanrao123@cluster0.gm44f.mongodb.net/emovie?retryWrites=true&w=majority",
+  //SPecify Mongo URI
   "jwtSecret": "mySecret"
 }
